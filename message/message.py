@@ -60,7 +60,7 @@ class Sender_Server(Thread):
             while True:
                 message = input(">>: ")
                 server.send(bytes(message, encoding='utf-8'))
-                recv_data = server.recv(1024).decode('utf-8')
+                # recv_data = server.recv(1024).decode('utf-8')
                 # print(">>: {}".format(recv_data))
         except KeyboardInterrupt:
             server.close()
@@ -96,6 +96,6 @@ class Receiver_Server(Thread):
                 # 接收消息
                 recv_data = conn.recv(1024).decode('utf-8')
                 print("{} >>: {}".format(self.ip, recv_data))
-                conn.send(bytes("服务器已成功接收到信息..", encoding="utf-8"))
+                # conn.send(bytes("服务器已成功接收到信息..", encoding="utf-8"))
         except:
             server.close()

@@ -40,10 +40,12 @@ if __name__ == '__main__':
     VERSION = args.version
     LEVEL = args.level
 
-    senderServer = Sender_Server(SENDER_IP, PORT, VERSION)
-    receiverServer = Receiver_Server(RECEIVER_IP, PORT+1, VERSION)
+    senderServer = Sender_Server(RECEIVER_IP, PORT, VERSION)
+    receiverServer = Receiver_Server(RECEIVER_IP, PORT, VERSION)
+    
     senderServer.start()
     receiverServer.start()
+    
 
     while True:
         time.sleep(1)
