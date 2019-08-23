@@ -19,7 +19,7 @@ except KeyboardInterrupt:
     server.close()
     print("会话已终止...")
 """
-import socket
+from socket import *
 from threading import Thread
 import cv2
 import re
@@ -52,7 +52,7 @@ class Sender_Server(Thread):
 
     def run(self):
         print("---> 文字聊天服务初始化中...")
-        server = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+        server = self.sock
 
         # 连接服务器
         server.connect((self.ip, self.port))
@@ -60,7 +60,7 @@ class Sender_Server(Thread):
             while True:
                 message = input(">>: ")
                 server.send(bytes(message, encoding='utf-8'))
-                # recv_data = server.recv(1024).decode('utf-8')
+                recv_data = server.recv(1024).decode('utf-8')
                 # print(">>: {}".format(recv_data))
         except KeyboardInterrupt:
             server.close()
@@ -86,7 +86,7 @@ class Receiver_Server(Thread):
             self.stream.close()
 
     def run(self):
-        server = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+        server = self.sock
         server.bind((self.ip, self.port)) 
         server.listen(5)
 
@@ -96,6 +96,6 @@ class Receiver_Server(Thread):
                 # 接收消息
                 recv_data = conn.recv(1024).decode('utf-8')
                 print("{} >>: {}".format(self.ip, recv_data))
-                # conn.send(bytes("服务器已成功接收到信息..", encoding="utf-8"))
+                conn.send(bytes("服务器已成功接收到信息..", encoding="utf-8"))
         except:
             server.close()

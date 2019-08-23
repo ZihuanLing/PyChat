@@ -10,10 +10,23 @@ import argparse
 from message.message import Sender_Server, Receiver_Server
 
 if __name__ == '__main__':
+    def get_host_ip():
+        """
+        查询本机ip地址
+        :return:
+        """
+        try:
+            s = socket.socket(socket.AF_INET,socket.SOCK_DGRAM)
+            s.connect(('8.8.8.8',80))
+            ip = s.getsockname()[0]
+        finally:
+            s.close()
+
+        return ip
     # 参数设置
     parser = argparse.ArgumentParser()
     receiver_ip = input("请输入要进行通信的地址：")
-    sender_ip = socket.gethostname()
+    sender_ip = get_host_ip()
     parser.add_argument('--receiver_ip', type=str, default=receiver_ip)
     parser.add_argument('--sender_ip', type=str, default=sender_ip)
     parser.add_argument('--port', type=int, default=10087)
@@ -28,7 +41,7 @@ if __name__ == '__main__':
     LEVEL = args.level
 
     senderServer = Sender_Server(SENDER_IP, PORT, VERSION)
-    receiverServer = Sender_Server(RECEIVER_IP, PORT, VERSION)
+    receiverServer = Receiver_Server(RECEIVER_IP, PORT+1, VERSION)
     senderServer.start()
     receiverServer.start()
 
