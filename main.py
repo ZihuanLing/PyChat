@@ -9,8 +9,8 @@ import os
 import struct
 import zlib
 import wave
-from vchat import Video_Server, Video_Client
-from achat import Audio_Server, Audio_Client
+from video.vchat import Video_Server, Video_Client
+from video.achat import Audio_Server, Audio_Client
 
 parser = argparse.ArgumentParser()
 
