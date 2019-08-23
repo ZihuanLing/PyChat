@@ -1,5 +1,5 @@
 from socket import *
-import threading
+from threading import Thread
 import cv2
 import re
 import sys
@@ -21,9 +21,10 @@ WAVE_OUTPUT_FILENAME = "output.wav"
 
 
 
-class Audio_Server(threading.Thread):
+class Audio_Server(Thread):
     def __init__(self, port, version) :
-        threading.Thread.__init__(self)
+        # Thread.__init__(self)
+        super().__init__()
         self.setDaemon(True)
         self.ADDR = ('', port)
         if version == 4:
@@ -32,6 +33,7 @@ class Audio_Server(threading.Thread):
             self.sock = socket(AF_INET6 ,SOCK_STREAM)
         self.p = pyaudio.PyAudio()
         self.stream = None
+        
     def __del__(self):
         self.sock.close()
         if self.stream is not None:
@@ -55,7 +57,6 @@ class Audio_Server(threading.Thread):
                                   )
         
         while True:
-            print("cdsbkj")
             while len(data) < payload_size:
                 data += conn.recv(81920)
             packed_size = data[:payload_size]
@@ -70,9 +71,10 @@ class Audio_Server(threading.Thread):
                 self.stream.write(frame, CHUNK)
         
 
-class Audio_Client(threading.Thread):
+class Audio_Client(Thread):
     def __init__(self ,ip, port, version):
-        threading.Thread.__init__(self)
+        # Thread.__init__(self)
+        super().__init__()
         self.setDaemon(True)
         self.ADDR = (ip, port)
         if version == 4:

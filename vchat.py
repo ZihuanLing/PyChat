@@ -1,5 +1,5 @@
 from socket import *
-import threading
+from threading import Thread
 import cv2
 import re
 import time
@@ -11,11 +11,13 @@ import zlib
 import wave
 
 
-class Video_Client(threading.Thread):
+class Video_Client(Thread):
+    # 视频客户端
     def __init__(self ,ip, port, level, version):
-        threading.Thread.__init__(self)
-        self.setDaemon(True)
-        self.ADDR = (ip, port)
+        # Thread.__init__(self)
+        super().__init__()
+        self.setDaemon(True)    # 守护进程
+        self.ADDR = (ip, port)  # 连接地址
         if level <= 3:
             self.interval = level
         else:
@@ -28,21 +30,25 @@ class Video_Client(threading.Thread):
         else:
             self.sock = socket(AF_INET6, SOCK_STREAM)
         self.cap = cv2.VideoCapture(0)
+
     def __del__(self) :
         self.sock.close()
         self.cap.release()
+
     def run(self):
         print("VEDIO client starts...")
         while True:
+            # 循环连接，如果连接不上，间隔一秒后再次连接
             try:
                 self.sock.connect(self.ADDR)
                 break
             except:
-                time.sleep(3)
+                time.sleep(1)
                 continue
         print("VEDIO client connected...")
         while self.cap.isOpened():
             ret, frame = self.cap.read()
+            # 一个矩形窗口
             sframe = cv2.resize(frame, (0,0), fx=self.fx, fy=self.fx)
             data = pickle.dumps(sframe)
             zdata = zlib.compress(data, zlib.Z_BEST_COMPRESSION)
@@ -52,23 +58,26 @@ class Video_Client(threading.Thread):
                 break
             for i in range(self.interval):
                 self.cap.read()
-# 服务器端最终代码如下，增加了对接收到数据的解压缩处理。
 
-class Video_Server(threading.Thread):
+class Video_Server(Thread):
+    # 服务器端最终代码如下，增加了对接收到数据的解压缩处理。
     def __init__(self, port, version) :
-        threading.Thread.__init__(self)
+        # Thread.__init__(self)
+        super().__init__()
         self.setDaemon(True)
         self.ADDR = ('', port)
         if version == 4:
             self.sock = socket(AF_INET ,SOCK_STREAM)
         else:
             self.sock = socket(AF_INET6 ,SOCK_STREAM)
+
     def __del__(self):
         self.sock.close()
         try:
             cv2.destroyAllWindows()
         except:
             pass
+            
     def run(self):
         print("VEDIO server starts...")
         self.sock.bind(self.ADDR)
@@ -93,3 +102,4 @@ class Video_Server(threading.Thread):
             cv2.imshow('Remote', frame)
             if cv2.waitKey(1) & 0xFF == 27:
                 break
+
