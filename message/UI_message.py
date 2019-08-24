@@ -76,7 +76,6 @@ class Messager(Thread):
                 self.client.close()
                 self.sock.close()
                 self.connect_end = True
-                sys.exit(0)
         except:
             self.ui.textBrowser.append('---> 服务已断开...')
             self.sock.close()

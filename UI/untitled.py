@@ -55,8 +55,7 @@ class Ui_MainWindow(object):
         MainWindow.setWindowTitle(_translate("MainWindow", "MainWindow"))
         self.pushButton.setText(_translate("MainWindow", "发送"))
         self.pushButton.setShortcut('enter')
-        #self.pushButton.clicked.connect(self.clear)
+        self.pushButton.clicked.connect(self.clear())
         self.label.setText(_translate("MainWindow", "小明"))
     def clear(self):
-        print("lalalala")
-        self.lineEdit.textEdit.setText("")
+        self.lineEdit.clear()
