@@ -48,7 +48,7 @@ class Messager(Thread):
         self.client.connect((self.receiverIP, self.port))
         print('---> 连接成功')
         try:
-            while True: 
+            while True:
                 # 发送
                 msg = input('\b\b\b\b>>：')
                 self.client.send(bytes(msg, encoding='utf-8'))
