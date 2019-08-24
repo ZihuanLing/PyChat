@@ -28,6 +28,8 @@ class Messager(Thread):
         self.sock.bind(('', self.port))
         self.sock.listen(5)
         self.conn, self.addr = self.sock.accept()
+        nick_name = self.conn.recv(1024).decode('utf-8')
+        self.ui.label.setText(nick_name)
         while not self.connect_end:
             recv_data = self.conn.recv(1024).decode('utf-8')
             if recv_data == "##":
@@ -60,6 +62,7 @@ class Messager(Thread):
         server = Thread(target=self.msg_receiver)
         server.start()
         self.client.connect((self.receiverIP, self.port))
+        self.client.send(bytes(self.nick_name, encoding='utf-8'))
         self.ui.textBrowser.append('---> 连接成功')
         self.ui.label.setText(self.receiverIP)
         self.ui.pushButton.disconnect()
@@ -68,11 +71,16 @@ class Messager(Thread):
     def send_message(self):
         try:
             msg = self.ui.lineEdit.text()
-            self.client.send(bytes(msg, encoding='utf-8'))
-            self.ui.textBrowser.append('<font color="gray">{}    {}<font>'.format(self.nick_name,strftime("%H:%M:%S", gmtime())))
-            self.ui.textBrowser.append('{}\n'.format(msg))
-            self.ui.textBrowser.moveCursor(self.ui.textBrowser.textCursor().End)
-            self.ui.lineEdit.clear()
+            if msg:
+                self.client.send(bytes(msg, encoding='utf-8'))
+                self.ui.textBrowser.append('<font color="gray">{}    {}<font>'.format(self.nick_name,strftime("%H:%M:%S", gmtime())))
+                self.ui.textBrowser.append('{}\n'.format(msg))
+                self.ui.textBrowser.moveCursor(self.ui.textBrowser.textCursor().End)
+                self.ui.lineEdit.clear()
+            else:
+                self.ui.textBrowser.append('<font color="gray">{}    {}<font>'.format("系统提示",strftime("%H:%M:%S", gmtime())))
+                self.ui.textBrowser.append('{}\n'.format("消息不能为空哦"))
+                self.ui.textBrowser.moveCursor(self.ui.textBrowser.textCursor().End)
             if msg == '##':
                 self.client.close()
                 self.sock.close()
@@ -92,6 +100,17 @@ class Messager(Thread):
             self.nick_name=self.ui.lineEdit.text()
             self.main_window()
         self.ui.pushButton.clicked.connect(get_ip)
+        
         self.ui.pushButton.setShortcut('enter')
         self.window.show()
         sys.exit(self.app.exec_())
+        # print(self.window.closeEvent)
+        self.window.closeEvent = self.tmp
+        # sys.exit(self.exit())
+
+    def tmp(self):
+        print('Hello world!')
+
+    def exit(self):
+        print('window close')
+        self.app.exec_()

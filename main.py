@@ -23,7 +23,6 @@ class UI(object):
 
     def argu_setting(self):
         # 参数设置
-
         parser = argparse.ArgumentParser()
         sender_ip = "127.0.0.1"
         parser.add_argument('--sender_ip', type=str, default=sender_ip)
