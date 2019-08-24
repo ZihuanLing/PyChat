@@ -1,2 +1,4 @@
 tmp*
 .vscode
+.idea
+__pycache__
