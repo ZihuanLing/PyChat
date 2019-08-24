@@ -41,10 +41,11 @@ class Messager(Thread):
                 sys.exit(0)
                 break
             elif recv_data:
-                self.ui.textBrowser.append('{}    {}'.format(self.receiverIP, strftime("%H:%M:%S", gmtime())))
+                self.ui.textBrowser.append('<font color="gray">{}    {}<font>'.format(self.receiverIP, strftime("%H:%M:%S", gmtime())))
                 # print('\b\b\b\b{} >>: {}\t{}\n\n>>: '.format(self.receiverIP, recv_data,
                 #                                              strftime("%Y/%m/%d %H:%M:%S", gmtime())), end="")
                 self.ui.textBrowser.append('{}\n'.format(recv_data))
+                self.ui.textBrowser.moveCursor(self.ui.textBrowser.textCursor().End)
                 
     def main_window(self):
         # print(self.receiverIP)
@@ -68,8 +69,9 @@ class Messager(Thread):
         try:
             msg = self.ui.lineEdit.text()
             self.client.send(bytes(msg, encoding='utf-8'))
-            self.ui.textBrowser.append('我    {}'.format(strftime("%H:%M:%S", gmtime())))
+            self.ui.textBrowser.append('<font color="gray">我    {}<font>'.format(strftime("%H:%M:%S", gmtime())))
             self.ui.textBrowser.append('{}\n'.format(msg))
+            self.ui.textBrowser.moveCursor(self.ui.textBrowser.textCursor().End)
             if msg == '##':
                 self.client.close()
                 self.sock.close()
