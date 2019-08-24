@@ -6,7 +6,7 @@ from time import gmtime, strftime
 import win32api
 import win32con
 from PyQt5 import QtWidgets, QtCore
-from UI import untitled
+from UI import untitled,ip
 
 
 class Messager(Thread):
@@ -46,12 +46,21 @@ class Messager(Thread):
                 # print('\b\b\b\b{} >>: {}\t{}\n\n>>: '.format(self.receiverIP, recv_data,
                 #                                              strftime("%Y/%m/%d %H:%M:%S", gmtime())), end="")
 
-    def whichbtn(self):
-        self.receiverIP = self.ui.lineEdit.text()
+    def main_window(self):
+        # print(self.receiverIP)
+
+        self.window = QtWidgets.QMainWindow()  # 生成窗口q
+        self.ui = untitled.Ui_MainWindow()  # 使用QTdesigner自动创建的类
+        self.ui.setupUi(self.window)
+        self.window.show()
+
+        self.ui.textBrowser.append('---> 初始化服务中...')
+        self.client = socket(AF_INET, SOCK_STREAM)
         server = Thread(target=self.msg_receiver)
         server.start()
         self.client.connect((self.receiverIP, self.port))
         self.ui.textBrowser.append('---> 连接成功')
+        self.ui.label.setText(self.receiverIP)
         self.ui.pushButton.disconnect()
         self.ui.pushButton.clicked.connect(self.send_message)
 
@@ -72,12 +81,14 @@ class Messager(Thread):
         QtCore.QCoreApplication.setAttribute(QtCore.Qt.AA_EnableHighDpiScaling)
         self.app = QtWidgets.QApplication(sys.argv)  # 生成应用
         self.window = QtWidgets.QMainWindow()  # 生成窗口q
-        self.ui = untitled.Ui_MainWindow()  # 使用QTdesigner自动创建的类
+        self.ui = ip.Ui_ip()  # 使用QTdesigner自动创建的类
         self.ui.setupUi(self.window)
-
-        self.ui.textBrowser.append('---> 初始化服务中...')
-        self.client = socket(AF_INET, SOCK_STREAM)
-        self.ui.textBrowser.append('---> 请输入联系人的ip: ')
-        self.ui.pushButton.clicked.connect(self.whichbtn)
+        # self.ui.textBrowser.append('---> 初始化服务中...')
+        # self.client = socket(AF_INET, SOCK_STREAM)
+        # self.ui.textBrowser.append('---> 请输入联系人的ip: ')
+        def get_ip():
+            self.receiverIP = self.ui.lineEdit.text()
+            self.main_window()
+        self.ui.pushButton.clicked.connect(get_ip)
         self.window.show()
         sys.exit(self.app.exec_())
