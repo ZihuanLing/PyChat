@@ -69,9 +69,10 @@ class Messager(Thread):
         try:
             msg = self.ui.lineEdit.text()
             self.client.send(bytes(msg, encoding='utf-8'))
-            self.ui.textBrowser.append('<font color="gray">我    {}<font>'.format(strftime("%H:%M:%S", gmtime())))
+            self.ui.textBrowser.append('<font color="gray">{}    {}<font>'.format(self.nick_name,strftime("%H:%M:%S", gmtime())))
             self.ui.textBrowser.append('{}\n'.format(msg))
             self.ui.textBrowser.moveCursor(self.ui.textBrowser.textCursor().End)
+            self.ui.lineEdit.clear()
             if msg == '##':
                 self.client.close()
                 self.sock.close()
@@ -86,12 +87,11 @@ class Messager(Thread):
         self.window = QtWidgets.QMainWindow()  # 生成窗口q
         self.ui = ip.Ui_ip()  # 使用QTdesigner自动创建的类
         self.ui.setupUi(self.window)
-        # self.ui.textBrowser.append('---> 初始化服务中...')
-        # self.client = socket(AF_INET, SOCK_STREAM)
-        # self.ui.textBrowser.append('---> 请输入联系人的ip: ')
         def get_ip():
-            self.receiverIP = self.ui.lineEdit.text()
+            self.receiverIP = self.ui.lineEdit_2.text()
+            self.nick_name=self.ui.lineEdit.text()
             self.main_window()
         self.ui.pushButton.clicked.connect(get_ip)
+        self.ui.pushButton.setShortcut('enter')
         self.window.show()
         sys.exit(self.app.exec_())
