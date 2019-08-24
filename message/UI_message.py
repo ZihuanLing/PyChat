@@ -68,11 +68,16 @@ class Messager(Thread):
     def send_message(self):
         try:
             msg = self.ui.lineEdit.text()
-            self.client.send(bytes(msg, encoding='utf-8'))
-            self.ui.textBrowser.append('<font color="gray">{}     {}<font>'.format(self.nick_name,strftime("%H:%M:%S", gmtime())))
-            self.ui.textBrowser.append('{}\n'.format(msg))
-            self.ui.textBrowser.moveCursor(self.ui.textBrowser.textCursor().End)
-            self.ui.lineEdit.clear()
+            if msg:
+                self.client.send(bytes(msg, encoding='utf-8'))
+                self.ui.textBrowser.append('<font color="gray">{}    {}<font>'.format(self.nick_name,strftime("%H:%M:%S", gmtime())))
+                self.ui.textBrowser.append('{}\n'.format(msg))
+                self.ui.textBrowser.moveCursor(self.ui.textBrowser.textCursor().End)
+                self.ui.lineEdit.clear()
+            else:
+                self.ui.textBrowser.append('<font color="gray">{}    {}<font>'.format("系统提示",strftime("%H:%M:%S", gmtime())))
+                self.ui.textBrowser.append('{}\n'.format("消息不能为空哦"))
+                self.ui.textBrowser.moveCursor(self.ui.textBrowser.textCursor().End)
             if msg == '##':
                 self.client.close()
                 self.sock.close()
