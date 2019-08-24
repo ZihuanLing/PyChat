@@ -1,6 +1,7 @@
 # coding:utf-8
 from threading import Thread
 from socket import *
+import sys
 
 class Messager(Thread):
     def __init__(self, ip, port, version):
@@ -24,27 +25,37 @@ class Messager(Thread):
         self.conn, self.addr = self.sock.accept()
         while not self.connect_end:
             recv_data = self.conn.recv(1024).decode('utf-8')
-            print('\n{} >>: {}\n'.format(self.ip, recv_data))
+            if recv_data == "##":
+                self.sock.close()
+                self.connect_end = True
+                print('\n---> {} 断开了连接... '.format(self.receiverIP))
+                sys.exit(0)
+                break
+            else:
+                print('\n{} >>: {}\n\n>>: '.format(self.receiverIP, recv_data), end="")
 
     def run(self):
         print('---> 初始化服务中...')
-        server = Thread(target=self.msg_receiver)
-        server.start()
+        
         
         client = socket(AF_INET, SOCK_STREAM)
-        ip = input('---> 请输入联系人的ip: ')
-        client.connect((ip, self.port))
+        self.receiverIP = input('---> 请输入联系人的ip: ')
+        server = Thread(target=self.msg_receiver)
+        server.start()
+
+        client.connect((self.receiverIP, self.port))
         print('---> 连接成功')
         try:
             while True: 
                 # 发送
                 msg = input('>>：')
+                client.send(bytes(msg, encoding='utf-8'))
                 if msg == '##':
                     client.close()
                     self.sock.close()
                     self.connect_end = True
+                    sys.exit(0)
                     break
-                client.send(bytes(msg, encoding='utf-8'))
                 # self.conn.send(bytes(msg, encoding='utf-8'))
         except:
             print('---> 服务已断开...')
