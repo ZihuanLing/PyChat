@@ -4,4 +4,4 @@ def reInterpreter(name):
 
 
 if __name__ == '__main__':
-    reInterpreter('untitled')  # ui文件名，不包括后缀s
+    reInterpreter('ip')  # ui文件名，不包括后缀s
