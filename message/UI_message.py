@@ -6,7 +6,7 @@ from time import gmtime, strftime
 import win32api
 import win32con
 from PyQt5 import QtWidgets, QtCore
-from UI import untitled,ip
+from UI import untitled,ip,Dialog
 
 
 class Messager(Thread):
@@ -50,7 +50,7 @@ class Messager(Thread):
     def main_window(self):
         # print(self.receiverIP)
 
-        self.window = QtWidgets.QMainWindow()  # 生成窗口q
+        self.window = Dialog.Dialog()  # 生成窗口q
         self.ui = untitled.Ui_MainWindow()  # 使用QTdesigner自动创建的类
         self.ui.setupUi(self.window)
         self.window.show()
@@ -69,7 +69,7 @@ class Messager(Thread):
         try:
             msg = self.ui.lineEdit.text()
             self.client.send(bytes(msg, encoding='utf-8'))
-            self.ui.textBrowser.append('<font color="gray">{}    {}<font>'.format(self.nick_name,strftime("%H:%M:%S", gmtime())))
+            self.ui.textBrowser.append('<font color="gray">{}     {}<font>'.format(self.nick_name,strftime("%H:%M:%S", gmtime())))
             self.ui.textBrowser.append('{}\n'.format(msg))
             self.ui.textBrowser.moveCursor(self.ui.textBrowser.textCursor().End)
             self.ui.lineEdit.clear()

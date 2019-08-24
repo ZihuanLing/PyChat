@@ -3,27 +3,14 @@ from PyQt5 import QtWidgets,QtCore
 import sys
 import argparse
 from message.UI_message import Messager
+from UI import Dialog
 class UI(object):
     def __init__(self):
 
-        self.others()
-
-    def others(self):
-        # self.buttonConnect()
         self.argu_setting()
-
-    # def buttonConnect(self):
-    #     self.ui.pushButton.clicked.connect(self.send)
-    #
-    # def send(self):
-    #     self.ui.textBrowser.append(self.ui.label.text()+": "+self.ui.lineEdit.text())
-    #
-    # def getText(self):
-    #     return self.ui.lineEdit.text()
 
     def argu_setting(self):
         # 参数设置
-
         parser = argparse.ArgumentParser()
         sender_ip = "127.0.0.1"
         parser.add_argument('--sender_ip', type=str, default=sender_ip)
@@ -34,7 +21,10 @@ class UI(object):
         PORT = args.port
         VERSION = args.version
         Msg = Messager(SENDER_IP, PORT, VERSION)
+        # diag=Dialog.Dialog()#声明窗口类
+        # diag.get_thread(Msg)#把线程传给窗口，以便重写窗口类
         Msg.start()
+
 if __name__ == '__main__':
     # import reInterpreter as inter
     ui = UI()
