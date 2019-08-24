@@ -1,6 +1,8 @@
 from UI import untitled
 from PyQt5 import QtWidgets,QtCore
 import sys
+import argparse
+from message.UI_message import Messager
 class UI(object):
     def __init__(self):
 
@@ -21,8 +23,7 @@ class UI(object):
 
     def argu_setting(self):
         # 参数设置
-        import argparse
-        from message.UI_message import Messager
+
         parser = argparse.ArgumentParser()
         sender_ip = "127.0.0.1"
         parser.add_argument('--sender_ip', type=str, default=sender_ip)

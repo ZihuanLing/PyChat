@@ -37,6 +37,6 @@ class Ui_ip(object):
 
     def retranslateUi(self, ip):
         _translate = QtCore.QCoreApplication.translate
-        ip.setWindowTitle(_translate("ip", "MainWindow"))
+        ip.setWindowTitle(_translate("ip", "请输入联系人ip"))
         self.pushButton.setText(_translate("ip", "确认"))
-
+        self.pushButton.setShortcut('enter')

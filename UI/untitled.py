@@ -46,13 +46,17 @@ class Ui_MainWindow(object):
         self.statusbar = QtWidgets.QStatusBar(MainWindow)
         self.statusbar.setObjectName("statusbar")
         MainWindow.setStatusBar(self.statusbar)
-
         self.retranslateUi(MainWindow)
         QtCore.QMetaObject.connectSlotsByName(MainWindow)
+
 
     def retranslateUi(self, MainWindow):
         _translate = QtCore.QCoreApplication.translate
         MainWindow.setWindowTitle(_translate("MainWindow", "MainWindow"))
         self.pushButton.setText(_translate("MainWindow", "发送"))
+        self.pushButton.setShortcut('enter')
+        #self.pushButton.clicked.connect(self.clear)
         self.label.setText(_translate("MainWindow", "小明"))
-
+    def clear(self):
+        print("lalalala")
+        self.lineEdit.textEdit.setText("")
