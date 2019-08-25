@@ -6,7 +6,9 @@ from time import gmtime, strftime
 import win32api
 import win32con
 from PyQt5 import QtWidgets, QtCore
-from UI import untitled,ip,Dialog
+from PyQt5.QtWidgets import QMessageBox
+
+from UI import untitled, ip, Dialog
 
 
 class Messager(Thread):
@@ -29,7 +31,7 @@ class Messager(Thread):
         self.sock.listen(5)
         self.conn, self.addr = self.sock.accept()
         nick_name = self.conn.recv(1024).decode('utf-8')
-        self.ui.label.setText(nick_name)
+        # self.ui.label.setText(nick_name)
         while not self.connect_end:
             recv_data = self.conn.recv(1024).decode('utf-8')
             if recv_data == "##":
@@ -43,12 +45,13 @@ class Messager(Thread):
                 sys.exit(0)
                 break
             elif recv_data:
-                self.ui.textBrowser.append('<font color="gray">{}    {}<font>'.format(nick_name, strftime("%H:%M:%S", gmtime())))
+                self.ui.textBrowser.append(
+                    '<font color="gray">{}    {}<font>'.format(nick_name, strftime("%H:%M:%S", gmtime())))
                 # print('\b\b\b\b{} >>: {}\t{}\n\n>>: '.format(self.receiverIP, recv_data,
                 #                                              strftime("%Y/%m/%d %H:%M:%S", gmtime())), end="")
                 self.ui.textBrowser.append('{}\n'.format(recv_data))
                 self.ui.textBrowser.moveCursor(self.ui.textBrowser.textCursor().End)
-                
+
     def main_window(self):
         # print(self.receiverIP)
 
@@ -64,21 +67,39 @@ class Messager(Thread):
         self.client.connect((self.receiverIP, self.port))
         self.client.send(bytes(self.nick_name, encoding='utf-8'))
         self.ui.textBrowser.append('---> 连接成功')
+        print(self.receiverIP)
         self.ui.label.setText(self.receiverIP)
         self.ui.pushButton.disconnect()
         self.ui.pushButton.clicked.connect(self.send_message)
+        self.ui.pushButton_2.clicked.connect(self.video_launch)  # 点击视频聊天按钮触发video_connect方法
+
+    def video_request(self):#接受到聊天，调用该方法
+        reply = QMessageBox.question(self.window,
+                                     '视频聊天',
+                                     "是否接受？",
+                                     QMessageBox.Yes | QMessageBox.No,
+                                     QMessageBox.No)
+        if reply == QMessageBox.Yes:
+            print("yes")
+        else:
+            print("No")
+
+    def video_launch(self):#发起视频调用
+        pass
 
     def send_message(self):
         try:
             msg = self.ui.lineEdit.text()
             if msg:
                 self.client.send(bytes(msg, encoding='utf-8'))
-                self.ui.textBrowser.append('<font color="gray">{}    {}<font>'.format(self.nick_name,strftime("%H:%M:%S", gmtime())))
+                self.ui.textBrowser.append(
+                    '<font color="gray">{}    {}<font>'.format(self.nick_name, strftime("%H:%M:%S", gmtime())))
                 self.ui.textBrowser.append('{}\n'.format(msg))
                 self.ui.textBrowser.moveCursor(self.ui.textBrowser.textCursor().End)
                 self.ui.lineEdit.clear()
             else:
-                self.ui.textBrowser.append('<font color="gray">{}    {}<font>'.format("系统提示",strftime("%H:%M:%S", gmtime())))
+                self.ui.textBrowser.append(
+                    '<font color="gray">{}    {}<font>'.format("系统提示", strftime("%H:%M:%S", gmtime())))
                 self.ui.textBrowser.append('{}\n'.format("消息不能为空哦"))
                 self.ui.textBrowser.moveCursor(self.ui.textBrowser.textCursor().End)
             if msg == '##':
@@ -95,10 +116,12 @@ class Messager(Thread):
         self.window = QtWidgets.QMainWindow()  # 生成窗口q
         self.ui = ip.Ui_ip()  # 使用QTdesigner自动创建的类
         self.ui.setupUi(self.window)
+
         def get_ip():
             self.receiverIP = self.ui.lineEdit_2.text()
-            self.nick_name=self.ui.lineEdit.text()
+            self.nick_name = self.ui.lineEdit.text()
             self.main_window()
+
         self.ui.pushButton.clicked.connect(get_ip)
         self.ui.pushButton.setShortcut('enter')
         self.window.show()
