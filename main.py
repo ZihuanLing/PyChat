@@ -22,7 +22,7 @@ class UI(object):
         VERSION = args.version
         Msg = Messager(SENDER_IP, PORT, VERSION)
         # diag=Dialog.Dialog()#声明窗口类
-        # diag.get_thread(Msg)#把线程传给窗口，以便重写窗口类
+        # diag.get_thread(Msg,)#把线程传给窗口，以便重写窗口类
         Msg.start()
 
 if __name__ == '__main__':

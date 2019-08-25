@@ -11,7 +11,12 @@
    </rect>
   </property>
   <property name="windowTitle">
-   <string>MainWindow</string>
+   <string>PyChat</string>
+  </property>
+  <property name="windowIcon">
+   <iconset theme=":/pic/logo.ico">
+    <normalon>:/pic/logo.ico</normalon>
+   </iconset>
   </property>
   <widget class="QWidget" name="centralwidget">
    <layout class="QGridLayout" name="gridLayout">
@@ -50,6 +55,13 @@
           <width>0</width>
           <height>20</height>
          </size>
+        </property>
+        <property name="font">
+         <font>
+          <family>Adobe Arabic</family>
+          <weight>75</weight>
+          <bold>true</bold>
+         </font>
         </property>
         <property name="text">
          <string>小明</string>
@@ -107,6 +119,8 @@
   </widget>
   <widget class="QStatusBar" name="statusbar"/>
  </widget>
- <resources/>
+ <resources>
+  <include location="apprcc.qrc"/>
+ </resources>
  <connections/>
 </ui>
