@@ -9,8 +9,7 @@ import os
 import struct
 import zlib
 import wave
-from video.vchat import Video_Server, Video_Client
-from video.achat import Audio_Server, Audio_Client
+from video.vchat1 import Video_Server, Video_Client
 
 parser = argparse.ArgumentParser()
 
@@ -29,20 +28,13 @@ LEVEL = args.level
 if __name__ == '__main__':
     vclient = Video_Client(IP, PORT, LEVEL, VERSION)
     vserver = Video_Server(PORT, VERSION)
-    aclient = Audio_Client(IP, PORT+1, VERSION)
-    aserver = Audio_Server(PORT+1, VERSION)
     vclient.start()
-    aclient.start()
     time.sleep(1)    # make delay to start server
     vserver.start()
-    aserver.start()
     while True:
 
         time.sleep(1)
         if not vserver.isAlive() or not vclient.isAlive():
             print("Video connection lost...")
-            sys.exit(0)
-        if not aserver.isAlive() or not aclient.isAlive() :
-            print("Audio connection lost...")
             sys.exit(0)
         

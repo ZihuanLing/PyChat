@@ -2,11 +2,24 @@
 from threading import Thread
 from socket import *
 import sys
-from time import gmtime, strftime
+from time import gmtime, strftime, sleep
 import win32api
 import win32con
 from PyQt5 import QtWidgets, QtCore
 from PyQt5.QtWidgets import QMessageBox
+import argparse
+import cv2
+import re
+import pyaudio
+import pickle
+import os
+import struct
+import zlib
+import wave
+
+sys.path.append("../video/")
+from video.vchat import Video_Server, Video_Client
+from video.achat import Audio_Server, Audio_Client
 
 from UI import untitled, ip, Dialog
 
@@ -34,15 +47,47 @@ class Messager(Thread):
         # self.ui.label.setText(nick_name)
         while not self.connect_end:
             recv_data = self.conn.recv(1024).decode('utf-8')
-            if recv_data == "##":
-                # 自身连接
-                self.client.close()
-                self.sock.close()
-                self.connect_end = True
-                self.ui.textBrowser.append('---> 与 {} 断开的连接已中断... '.format(self.receiverIP))
-                # print('\n---> 与 {} 断开的连接已中断... '.format(self.receiverIP))
-                win32api.keybd_event(13, 0, 0, 0)
-                sys.exit(0)
+            if recv_data == "VIDEO_REQUEST":
+                parser = argparse.ArgumentParser()
+                parser.add_argument('--host', type=str, default=self.receiverIP)
+                parser.add_argument('--port', type=int, default=8087)
+                parser.add_argument('--level', type=int, default=1)
+                parser.add_argument('-v', '--version', type=int, default=4)
+                args = parser.parse_args()
+                IP = args.host
+                PORT = args.port
+                VERSION = args.version
+                LEVEL = args.level
+                vclient = Video_Client(IP, PORT, LEVEL, VERSION)
+                vserver = Video_Server(PORT, VERSION)
+                vclient.start()
+                sleep(1)    # make delself.sock.connectay to start server
+                vserver.start()
+                self.client.send(bytes("VIDEO_RESPONED", encoding='utf-8'))
+
+            elif recv_data == "VIDEO_RESPONED":
+                self.client.send(bytes("VIDEO_RESPONED", encoding='utf-8'))
+                parser = argparse.ArgumentParser()
+                parser.add_argument('--host', type=str, default=self.receiverIP)
+                parser.add_argument('--port', type=int, default=8087)
+                parser.add_argument('--level', type=int, default=1)
+                parser.add_argument('-v', '--version', type=int, default=4)
+                args = parser.parse_args()
+                IP = args.host
+                PORT = args.port
+                VERSION = args.version
+                LEVEL = args.level
+
+                vclient = Video_Client(IP, PORT, LEVEL, VERSION)
+                vserver = Video_Server(PORT, VERSION)
+                vclient.start()
+                sleep(1)    # make delay to start server
+                vserver.start()
+                while True:
+                    sleep(1)
+                    if not vserver.isAlive() or not vclient.isAlive():
+                        print("Video connection lost...")
+                        sys.exit(0)
                 break
             elif recv_data:
                 self.ui.textBrowser.append(
@@ -85,7 +130,7 @@ class Messager(Thread):
             print("No")
 
     def video_launch(self):#发起视频调用
-        pass
+        self.client.send(bytes("VIDEO_REQUEST", encoding='utf-8'))
 
     def send_message(self):
         try:
@@ -102,10 +147,7 @@ class Messager(Thread):
                     '<font color="gray">{}    {}<font>'.format("系统提示", strftime("%H:%M:%S", gmtime())))
                 self.ui.textBrowser.append('{}\n'.format("消息不能为空哦"))
                 self.ui.textBrowser.moveCursor(self.ui.textBrowser.textCursor().End)
-            if msg == '##':
-                self.client.close()
-                self.sock.close()
-                self.connect_end = True
+
         except:
             self.ui.textBrowser.append('---> 服务已断开...')
             self.sock.close()
