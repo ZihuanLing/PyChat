@@ -113,6 +113,7 @@ class Messager(Thread):
         self.window.set_close_callback(self.win_close)
         self.ui = untitled.Ui_MainWindow()  # 使用QTdesigner自动创建的类
         self.ui.setupUi(self.window)
+        self.window.setWindowIcon(self.icon)#设置图标
         self.window.show()
 
         self.ui.textBrowser.append('---> 初始化服务中...')
@@ -184,9 +185,10 @@ class Messager(Thread):
         self.ui = ip.Ui_ip()  # 使用QTdesigner自动创建的类
         self.ui.setupUi(self.window)
         #增加图标
-        icon = QtGui.QIcon()
-        icon.addPixmap(QtGui.QPixmap("logo.ico"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
-        self.window.setWindowIcon(icon)
+        self.icon = QtGui.QIcon()
+        self.icon.addPixmap(QtGui.QPixmap("UI/logo.ico"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
+        self.window.setWindowIcon(self.icon)
+        self.window.setWindowTitle("PyChat")
         def get_ip():
             self.receiverIP = self.ui.lineEdit_2.text()
             self.nick_name = self.ui.lineEdit.text()

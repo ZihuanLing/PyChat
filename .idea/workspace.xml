@@ -2,9 +2,6 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="fb8ffedf-4f58-490e-8197-b3da04bf1598" name="Default Changelist" comment="">
-      <change beforePath="$PROJECT_DIR$/UI/apprcc.qrc" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/UI/untitled.py" beforeDir="false" afterPath="$PROJECT_DIR$/UI/untitled.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/UI/untitled.ui" beforeDir="false" afterPath="$PROJECT_DIR$/UI/untitled.ui" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/message/UI_message.py" beforeDir="false" afterPath="$PROJECT_DIR$/message/UI_message.py" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
@@ -18,8 +15,8 @@
       <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/message/UI_message.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="158">
-              <caret line="185" column="13" selection-start-line="185" selection-start-column="13" selection-end-line="185" selection-end-column="13" />
+            <state relative-caret-position="225">
+              <caret line="191" column="21" lean-forward="true" selection-start-line="191" selection-start-column="21" selection-end-line="191" selection-end-column="21" />
               <folding>
                 <element signature="e#15#43#0" expanded="true" />
               </folding>
@@ -306,7 +303,14 @@
       <option name="project" value="LOCAL" />
       <updated>1566739253227</updated>
     </task>
-    <option name="localTasksCounter" value="3" />
+    <task id="LOCAL-00003" summary="Merge branch 'master' of https://github.com/ZihuanLing/PyChat&#10;&#10;# Conflicts:&#10;#&#9;message/UI_message.py">
+      <created>1566739934965</created>
+      <option name="number" value="00003" />
+      <option name="presentableId" value="LOCAL-00003" />
+      <option name="project" value="LOCAL" />
+      <updated>1566739934965</updated>
+    </task>
+    <option name="localTasksCounter" value="4" />
     <servers />
   </component>
   <component name="ToolWindowManager">
@@ -319,7 +323,7 @@
       <window_info anchor="bottom" id="Message" order="0" />
       <window_info anchor="bottom" id="Find" order="1" />
       <window_info active="true" anchor="bottom" id="Run" order="2" visible="true" weight="0.21678321" />
-      <window_info anchor="bottom" id="Debug" order="3" weight="0.3986014" />
+      <window_info anchor="bottom" id="Debug" order="3" weight="0.32342657" />
       <window_info anchor="bottom" id="Cvs" order="4" weight="0.25" />
       <window_info anchor="bottom" id="Inspection" order="5" weight="0.4" />
       <window_info anchor="bottom" id="TODO" order="6" />
@@ -415,6 +419,13 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/UI/untitled.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-836">
+          <caret line="4" column="15" selection-start-line="4" selection-start-column="15" selection-end-line="4" selection-end-column="15" />
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/main.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="437">
@@ -425,17 +436,10 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/UI/untitled.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-836">
-          <caret line="4" column="15" selection-start-line="4" selection-start-column="15" selection-end-line="4" selection-end-column="15" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/message/UI_message.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="158">
-          <caret line="185" column="13" selection-start-line="185" selection-start-column="13" selection-end-line="185" selection-end-column="13" />
+        <state relative-caret-position="225">
+          <caret line="191" column="21" lean-forward="true" selection-start-line="191" selection-start-column="21" selection-end-line="191" selection-end-column="21" />
           <folding>
             <element signature="e#15#43#0" expanded="true" />
           </folding>
