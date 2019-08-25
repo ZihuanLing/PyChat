@@ -69,4 +69,4 @@ class Ui_MainWindow(object):
         self.label.setText(_translate("MainWindow", "小明"))
         self.pushButton_2.setText(_translate("MainWindow", "发起视频聊天"))
 
-import apprcc_rc
+
