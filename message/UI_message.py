@@ -44,29 +44,13 @@ class Messager(Thread):
         self.sock.listen(5)
         self.conn, self.addr = self.sock.accept()
         nick_name = self.conn.recv(1024).decode('utf-8')
-        # self.ui.label.setText(nick_name)
+        self.ui.label.setText(nick_name)
         while not self.connect_end:
             recv_data = self.conn.recv(1024).decode('utf-8')
             if recv_data == "VIDEO_REQUEST":
-                parser = argparse.ArgumentParser()
-                parser.add_argument('--host', type=str, default=self.receiverIP)
-                parser.add_argument('--port', type=int, default=8087)
-                parser.add_argument('--level', type=int, default=1)
-                parser.add_argument('-v', '--version', type=int, default=4)
-                args = parser.parse_args()
-                IP = args.host
-                PORT = args.port
-                VERSION = args.version
-                LEVEL = args.level
-                vclient = Video_Client(IP, PORT, LEVEL, VERSION)
-                vserver = Video_Server(PORT, VERSION)
-                vclient.start()
-                sleep(1)    # make delself.sock.connectay to start server
-                vserver.start()
-                self.client.send(bytes("VIDEO_RESPONED", encoding='utf-8'))
+                self.video_request()
 
             elif recv_data == "VIDEO_RESPONED":
-                self.client.send(bytes("VIDEO_RESPONED", encoding='utf-8'))
                 parser = argparse.ArgumentParser()
                 parser.add_argument('--host', type=str, default=self.receiverIP)
                 parser.add_argument('--port', type=int, default=8087)
@@ -83,12 +67,12 @@ class Messager(Thread):
                 vclient.start()
                 sleep(1)    # make delay to start server
                 vserver.start()
-                while True:
-                    sleep(1)
-                    if not vserver.isAlive() or not vclient.isAlive():
-                        print("Video connection lost...")
-                        sys.exit(0)
-                break
+                # while True:
+                #     sleep(1)
+                #     if not vserver.isAlive() or not vclient.isAlive():
+                #         print("Video connection lost...")
+                #         sys.exit(0)
+                # break
             elif recv_data:
                 self.ui.textBrowser.append(
                     '<font color="gray">{}    {}<font>'.format(nick_name, strftime("%H:%M:%S", gmtime())))
@@ -112,8 +96,7 @@ class Messager(Thread):
         self.client.connect((self.receiverIP, self.port))
         self.client.send(bytes(self.nick_name, encoding='utf-8'))
         self.ui.textBrowser.append('---> 连接成功')
-        print(self.receiverIP)
-        self.ui.label.setText(self.receiverIP)
+        # self.ui.label.setText(self.receiverIP)
         self.ui.pushButton.disconnect()
         self.ui.pushButton.clicked.connect(self.send_message)
         self.ui.pushButton_2.clicked.connect(self.video_launch)  # 点击视频聊天按钮触发video_connect方法
@@ -125,9 +108,24 @@ class Messager(Thread):
                                      QMessageBox.Yes | QMessageBox.No,
                                      QMessageBox.No)
         if reply == QMessageBox.Yes:
-            print("yes")
+            parser = argparse.ArgumentParser()
+            parser.add_argument('--host', type=str, default=self.receiverIP)
+            parser.add_argument('--port', type=int, default=8087)
+            parser.add_argument('--level', type=int, default=1)
+            parser.add_argument('-v', '--version', type=int, default=4)
+            args = parser.parse_args()
+            IP = args.host
+            PORT = args.port
+            VERSION = args.version
+            LEVEL = args.level
+            vclient = Video_Client(IP, PORT, LEVEL, VERSION)
+            vserver = Video_Server(PORT, VERSION)
+            vclient.start()
+            sleep(1)    # make delself.sock.connectay to start server
+            vserver.start()
+            self.client.send(bytes("VIDEO_RESPONED", encoding='utf-8'))
         else:
-            print("No")
+            pass
 
     def video_launch(self):#发起视频调用
         self.client.send(bytes("VIDEO_REQUEST", encoding='utf-8'))
