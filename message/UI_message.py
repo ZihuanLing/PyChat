@@ -99,6 +99,7 @@ class Messager(Thread):
         # self.ui.label.setText(self.receiverIP)
         self.ui.pushButton.disconnect()
         self.ui.pushButton.clicked.connect(self.send_message)
+        self.ui.pushButton.setShortcut('enter')
         self.ui.pushButton_2.clicked.connect(self.video_launch)  # 点击视频聊天按钮触发video_connect方法
 
     def video_request(self):#接受到聊天，调用该方法
