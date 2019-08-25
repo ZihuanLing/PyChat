@@ -12,6 +12,8 @@ class Ui_MainWindow(object):
     def setupUi(self, MainWindow):
         MainWindow.setObjectName("MainWindow")
         MainWindow.resize(480, 318)
+        icon = QtGui.QIcon.fromTheme(":/pic/logo.ico")
+        MainWindow.setWindowIcon(icon)
         self.centralwidget = QtWidgets.QWidget(MainWindow)
         self.centralwidget.setObjectName("centralwidget")
         self.gridLayout = QtWidgets.QGridLayout(self.centralwidget)
@@ -31,6 +33,11 @@ class Ui_MainWindow(object):
         self.verticalLayout.addItem(spacerItem)
         self.label = QtWidgets.QLabel(self.centralwidget)
         self.label.setMinimumSize(QtCore.QSize(0, 20))
+        font = QtGui.QFont()
+        font.setFamily("Adobe Arabic")
+        font.setBold(True)
+        font.setWeight(75)
+        self.label.setFont(font)
         self.label.setAlignment(QtCore.Qt.AlignCenter)
         self.label.setIndent(0)
         self.label.setOpenExternalLinks(False)
@@ -57,8 +64,9 @@ class Ui_MainWindow(object):
 
     def retranslateUi(self, MainWindow):
         _translate = QtCore.QCoreApplication.translate
-        MainWindow.setWindowTitle(_translate("MainWindow", "MainWindow"))
+        MainWindow.setWindowTitle(_translate("MainWindow", "PyChat"))
         self.pushButton.setText(_translate("MainWindow", "发送"))
         self.label.setText(_translate("MainWindow", "小明"))
         self.pushButton_2.setText(_translate("MainWindow", "发起视频聊天"))
 
+import apprcc_rc
