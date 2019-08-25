@@ -14,7 +14,7 @@
    <string>PyChat</string>
   </property>
   <property name="windowIcon">
-   <iconset theme=":/pic/logo.ico">
+   <iconset>
     <normalon>:/pic/logo.ico</normalon>
    </iconset>
   </property>
@@ -119,8 +119,6 @@
   </widget>
   <widget class="QStatusBar" name="statusbar"/>
  </widget>
- <resources>
-  <include location="apprcc.qrc"/>
- </resources>
+ <resources/>
  <connections/>
 </ui>

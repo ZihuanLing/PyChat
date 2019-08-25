@@ -5,7 +5,7 @@ import sys
 from time import gmtime, strftime, sleep
 import win32api
 import win32con
-from PyQt5 import QtWidgets, QtCore
+from PyQt5 import QtWidgets, QtCore,QtGui
 from PyQt5.QtWidgets import QMessageBox
 import argparse
 import cv2
@@ -183,12 +183,15 @@ class Messager(Thread):
         self.window = QtWidgets.QMainWindow()  # 生成窗口q
         self.ui = ip.Ui_ip()  # 使用QTdesigner自动创建的类
         self.ui.setupUi(self.window)
-
+        #增加图标
+        icon = QtGui.QIcon()
+        icon.addPixmap(QtGui.QPixmap("logo.ico"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
+        self.window.setWindowIcon(icon)
         def get_ip():
             self.receiverIP = self.ui.lineEdit_2.text()
             self.nick_name = self.ui.lineEdit.text()
             self.main_window()
-
+            # 设置窗口图标
         self.ui.pushButton.clicked.connect(get_ip)
         self.ui.pushButton.setShortcut('enter')
         self.window.show()

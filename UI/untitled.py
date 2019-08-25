@@ -12,7 +12,8 @@ class Ui_MainWindow(object):
     def setupUi(self, MainWindow):
         MainWindow.setObjectName("MainWindow")
         MainWindow.resize(480, 318)
-        icon = QtGui.QIcon.fromTheme(":/pic/logo.ico")
+        icon = QtGui.QIcon()
+        icon.addPixmap(QtGui.QPixmap(":/pic/logo.ico"), QtGui.QIcon.Normal, QtGui.QIcon.On)
         MainWindow.setWindowIcon(icon)
         self.centralwidget = QtWidgets.QWidget(MainWindow)
         self.centralwidget.setObjectName("centralwidget")
@@ -68,5 +69,4 @@ class Ui_MainWindow(object):
         self.pushButton.setText(_translate("MainWindow", "发送"))
         self.label.setText(_translate("MainWindow", "小明"))
         self.pushButton_2.setText(_translate("MainWindow", "发起视频聊天"))
-
 
