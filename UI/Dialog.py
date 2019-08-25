@@ -1,6 +1,6 @@
 # 重写closeEvent方法，实现dialog窗体关闭时执行一些代码
 from PyQt5 import QtCore, QtGui, QtWidgets
-
+import sys
 
 class Dialog(QtWidgets.QMainWindow):
 
@@ -20,5 +20,6 @@ class Dialog(QtWidgets.QMainWindow):
                                                QtWidgets.QMessageBox.No)
         if reply == QtWidgets.QMessageBox.Yes:
             event.accept()
+            sys.exit(0)
         else:
             event.ignore()

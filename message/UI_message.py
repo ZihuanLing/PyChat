@@ -28,6 +28,8 @@ class Messager(Thread):
         self.sock.bind(('', self.port))
         self.sock.listen(5)
         self.conn, self.addr = self.sock.accept()
+        nick_name = self.conn.recv(1024).decode('utf-8')
+        self.ui.label.setText(nick_name)
         while not self.connect_end:
             recv_data = self.conn.recv(1024).decode('utf-8')
             if recv_data == "##":
@@ -41,7 +43,7 @@ class Messager(Thread):
                 sys.exit(0)
                 break
             elif recv_data:
-                self.ui.textBrowser.append('<font color="gray">{}    {}<font>'.format(self.receiverIP, strftime("%H:%M:%S", gmtime())))
+                self.ui.textBrowser.append('<font color="gray">{}    {}<font>'.format(nick_name, strftime("%H:%M:%S", gmtime())))
                 # print('\b\b\b\b{} >>: {}\t{}\n\n>>: '.format(self.receiverIP, recv_data,
                 #                                              strftime("%Y/%m/%d %H:%M:%S", gmtime())), end="")
                 self.ui.textBrowser.append('{}\n'.format(recv_data))
@@ -60,6 +62,7 @@ class Messager(Thread):
         server = Thread(target=self.msg_receiver)
         server.start()
         self.client.connect((self.receiverIP, self.port))
+        self.client.send(bytes(self.nick_name, encoding='utf-8'))
         self.ui.textBrowser.append('---> 连接成功')
         self.ui.label.setText(self.receiverIP)
         self.ui.pushButton.disconnect()
