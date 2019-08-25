@@ -38,6 +38,23 @@ class Messager(Thread):
     def __del__(self):
         self.sock.close()
 
+    def win_close(self):
+        # 窗口的关闭事件
+        # 向服务端发送一个关闭信号，并且关闭本地服务
+        # self.sock.send(bytes('SESSION_END_DISCONNECT',encoding='utf-8'))
+        print('window closing...')
+        try:
+            self.client.send(bytes('SESSION_END_DISCONNECT', encoding='utf-8'))
+        except:
+            print('Try to send close signal, but failed')
+        finally:
+            print('Is closing the connection')
+            self.conn.close()
+            self.client.close()
+            sys.exit(0)
+
+        print('ok!')
+
     def msg_receiver(self):
         self.ui.textBrowser.append('---> 等待对方确认...')
         self.sock.bind(('', self.port))
@@ -49,7 +66,15 @@ class Messager(Thread):
             recv_data = self.conn.recv(1024).decode('utf-8')
             if recv_data == "VIDEO_REQUEST":
                 self.video_request()
-
+            elif recv_data == 'SESSION_END_DISCONNECT':
+                print('received close signal, try to exit.')
+                try:
+                    self.conn.close()
+                    self.client.close()
+                except:
+                    print('signal received and try to close connection, but failed')
+                finally:
+                    sys.exit(0)
             elif recv_data == "VIDEO_RESPONED":
                 parser = argparse.ArgumentParser()
                 parser.add_argument('--host', type=str, default=self.receiverIP)
@@ -85,6 +110,7 @@ class Messager(Thread):
         # print(self.receiverIP)
 
         self.window = Dialog.Dialog()  # 生成窗口q
+        self.window.set_close_callback(self.win_close)
         self.ui = untitled.Ui_MainWindow()  # 使用QTdesigner自动创建的类
         self.ui.setupUi(self.window)
         self.window.show()

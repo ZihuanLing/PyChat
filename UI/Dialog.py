@@ -3,9 +3,16 @@ from PyQt5 import QtCore, QtGui, QtWidgets
 import sys
 
 class Dialog(QtWidgets.QMainWindow):
+    def __init__(self):
+        super().__init__()
+        self.callback = None
 
     def get_thread(self, main_thread):
         self.main_thread = main_thread
+
+    def set_close_callback(self, callback):
+        # 设置关闭事件的回调函数
+        self.callback = callback
 
     def closeEvent(self, event):
         """
@@ -20,6 +27,10 @@ class Dialog(QtWidgets.QMainWindow):
                                                QtWidgets.QMessageBox.No)
         if reply == QtWidgets.QMessageBox.Yes:
             event.accept()
+            if self.callback != None:
+                print('callback is ok!')
+                self.callback()
+            print('Trying to close Dialog')
             sys.exit(0)
         else:
             event.ignore()
