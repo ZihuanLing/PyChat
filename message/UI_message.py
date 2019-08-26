@@ -108,14 +108,15 @@ class Messager(Thread):
                 self.ui.textBrowser.moveCursor(self.ui.textBrowser.textCursor().End)
 
     def main_window(self):
-        # print(self.receiverIP)
-
-        self.window = Dialog.Dialog()  # 生成窗口q
+        # 生成窗口
+        self.window = Dialog.Dialog()
         self.window.set_close_callback(self.win_close)
         self.ui = untitled.Ui_MainWindow()  # 使用QTdesigner自动创建的类
         self.ui.setupUi(self.window)
         self.window.setWindowIcon(self.icon)  # 设置图标
         self.window.show()
+        #设置昵称，尚未收到昵称时用IP显示
+        self.ui.label.setText(self.receiverIP)
 
         self.ui.textBrowser.append('---> 初始化服务中...')
         self.client = socket(AF_INET, SOCK_STREAM)
@@ -125,13 +126,14 @@ class Messager(Thread):
         self.client.connect((self.receiverIP, self.port))
         self.client.send(bytes(self.nick_name, encoding='utf-8'))
         self.ui.textBrowser.append('---> 连接成功')
-        # self.ui.label.setText(self.receiverIP)
-        self.ui.pushButton.disconnect()
-        self.ui.pushButton.clicked.connect(self.send_message)
-        self.ui.pushButton.setShortcut('enter')
+
+        self.ui.pushButton.disconnect()#取消所有绑定
+        self.ui.pushButton.clicked.connect(self.send_message)#将按钮与send_massage方法绑定
+        self.ui.pushButton.setShortcut("return")
         self.ui.pushButton_2.clicked.connect(self.video_launch)  # 点击视频聊天按钮触发video_connect方法
 
-    def video_request(self):  # 接受到聊天，调用该方法
+    # 接受到聊天，调用该方法
+    def video_request(self):
         reply = QMessageBox.question(self.window,
                                      '视频聊天',
                                      "是否接受？",
@@ -159,7 +161,8 @@ class Messager(Thread):
         else:
             pass
 
-    def video_launch(self):  # 发起视频调用
+    # 发起视频调用
+    def video_launch(self):
         self.client.send(bytes("VIDEO_REQUEST", encoding='utf-8'))
 
     def send_message(self):
@@ -225,7 +228,7 @@ class Messager(Thread):
 
         #给按钮绑定方法get_ip
         self.ui.pushButton.clicked.connect(get_ip)
-        self.ui.pushButton.setShortcut('enter')
+        self.ui.pushButton.setShortcut('return')
 
         self.window.show()
         sys.exit(self.app.exec_())
