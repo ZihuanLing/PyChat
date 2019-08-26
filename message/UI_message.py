@@ -5,9 +5,10 @@ import sys
 from time import gmtime, strftime, sleep
 import win32api
 import win32con
-from PyQt5 import QtWidgets, QtCore,QtGui
+from PyQt5 import QtWidgets, QtCore, QtGui
 from PyQt5.QtWidgets import QMessageBox
 import argparse
+import configparser
 import cv2
 import re
 import pyaudio
@@ -90,7 +91,7 @@ class Messager(Thread):
                 vclient = Video_Client(IP, PORT, LEVEL, VERSION)
                 vserver = Video_Server(PORT, VERSION)
                 vclient.start()
-                sleep(1)    # make delay to start server
+                sleep(1)  # make delay to start server
                 vserver.start()
                 # while True:
                 #     sleep(1)
@@ -113,7 +114,7 @@ class Messager(Thread):
         self.window.set_close_callback(self.win_close)
         self.ui = untitled.Ui_MainWindow()  # 使用QTdesigner自动创建的类
         self.ui.setupUi(self.window)
-        self.window.setWindowIcon(self.icon)#设置图标
+        self.window.setWindowIcon(self.icon)  # 设置图标
         self.window.show()
 
         self.ui.textBrowser.append('---> 初始化服务中...')
@@ -130,12 +131,13 @@ class Messager(Thread):
         self.ui.pushButton.setShortcut('enter')
         self.ui.pushButton_2.clicked.connect(self.video_launch)  # 点击视频聊天按钮触发video_connect方法
 
-    def video_request(self):#接受到聊天，调用该方法
+    def video_request(self):  # 接受到聊天，调用该方法
         reply = QMessageBox.question(self.window,
                                      '视频聊天',
                                      "是否接受？",
                                      QMessageBox.Yes | QMessageBox.No,
                                      QMessageBox.No)
+
         if reply == QMessageBox.Yes:
             parser = argparse.ArgumentParser()
             parser.add_argument('--host', type=str, default=self.receiverIP)
@@ -149,14 +151,15 @@ class Messager(Thread):
             LEVEL = args.level
             vclient = Video_Client(IP, PORT, LEVEL, VERSION)
             vserver = Video_Server(PORT, VERSION)
+
             vclient.start()
-            sleep(1)    # make delself.sock.connectay to start server
+            sleep(1)  # make delself.sock.connectay to start server
             vserver.start()
             self.client.send(bytes("VIDEO_RESPONED", encoding='utf-8'))
         else:
             pass
 
-    def video_launch(self):#发起视频调用
+    def video_launch(self):  # 发起视频调用
         self.client.send(bytes("VIDEO_REQUEST", encoding='utf-8'))
 
     def send_message(self):
@@ -185,17 +188,44 @@ class Messager(Thread):
         self.window = QtWidgets.QMainWindow()  # 生成窗口q
         self.ui = ip.Ui_ip()  # 使用QTdesigner自动创建的类
         self.ui.setupUi(self.window)
-        #增加图标
+
+        # 读取user.ini文件，获取记住的昵称和ip
+        try:
+            config = configparser.ConfigParser()
+            config.read('UI/user.ini')
+            config_dict = config.defaults()
+            self.ui.lineEdit.setText(config_dict["nick_name"])
+            self.ui.lineEdit_2.setText(config_dict["receiver_ip"])
+        except:
+            #读取失败
+            pass
+
+        # 图标
         self.icon = QtGui.QIcon()
         self.icon.addPixmap(QtGui.QPixmap("UI/logo.ico"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
         self.window.setWindowIcon(self.icon)
+        # 标题
         self.window.setWindowTitle("PyChat")
+
+        # 按钮绑定事件:获取ip，昵称以及跳转到主窗口
         def get_ip():
             self.receiverIP = self.ui.lineEdit_2.text()
             self.nick_name = self.ui.lineEdit.text()
+
+            # 记住昵称和ip，写入user.ini文件
+            config["DEFAULT"] = {
+                "nick_name": self.nick_name,
+                "receiver_ip": self.receiverIP,
+            }
+            with open('UI/user.ini', 'w')as configfile:
+                config.write(configfile)
+
+            # 跳转到主窗口
             self.main_window()
-            # 设置窗口图标
+
+        #给按钮绑定方法get_ip
         self.ui.pushButton.clicked.connect(get_ip)
         self.ui.pushButton.setShortcut('enter')
+
         self.window.show()
         sys.exit(self.app.exec_())
