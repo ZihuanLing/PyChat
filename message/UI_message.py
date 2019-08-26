@@ -119,6 +119,7 @@ class Messager(Thread):
         self.ui.textBrowser.append('---> 初始化服务中...')
         self.client = socket(AF_INET, SOCK_STREAM)
         server = Thread(target=self.msg_receiver)
+        server.setDaemon(True)
         server.start()
         self.client.connect((self.receiverIP, self.port))
         self.client.send(bytes(self.nick_name, encoding='utf-8'))
