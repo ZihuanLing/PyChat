@@ -56,7 +56,7 @@ class Messager(Thread):
 
         print('ok!')
 
-    def msg_receiver(self):
+    def msg_receiver(self, vdo_req):
         self.ui.textBrowser.append('---> 等待对方确认...')
         self.sock.bind(('', self.port))
         self.sock.listen(5)
@@ -66,7 +66,8 @@ class Messager(Thread):
         while not self.connect_end:
             recv_data = self.conn.recv(1024).decode('utf-8')
             if recv_data == "VIDEO_REQUEST":
-                self.video_request()
+                vdo_req()
+                # self.video_request()
             elif recv_data == 'SESSION_END_DISCONNECT':
                 print('received close signal, try to exit.')
                 try:
@@ -120,7 +121,7 @@ class Messager(Thread):
 
         self.ui.textBrowser.append('---> 初始化服务中...')
         self.client = socket(AF_INET, SOCK_STREAM)
-        server = Thread(target=self.msg_receiver)
+        server = Thread(target=self.msg_receiver, args=(self.video_request, ))
         # server.setDaemon(True)
         server.start()
         self.client.connect((self.receiverIP, self.port))
@@ -151,6 +152,7 @@ class Messager(Thread):
             PORT = args.port
             VERSION = args.version
             LEVEL = args.level
+            print('Is trying to start the client and server.')
             vclient = Video_Client(IP, PORT, LEVEL, VERSION)
             vserver = Video_Server(PORT, VERSION)
 

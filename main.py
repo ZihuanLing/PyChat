@@ -1,3 +1,4 @@
+import fix_qt_import_error
 from UI import untitled
 from PyQt5 import QtWidgets,QtCore
 import sys

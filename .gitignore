@@ -1,5 +1,8 @@
 tmp*
 .vscode
 .idea
-__pycache__/*
-.pyc
+__pycache__
+*.pyc
+*.exe
+build
+dist
